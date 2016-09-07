@@ -1,0 +1,8 @@
+@prefix grvz: 	<http://widu.pl/grvz#> .
+@prefix wd: 	<http://widu.pl/moje#> .
+
+wd:RulesTableTest2 grvz:Shape 'record' .
+wd:RulesTableTest2 grvz:Color 'yellow' .
+wd:RulesTableTest2 grvz:Label '''{ {construct | RulesTableTest2} |CONSTRUCT \\{?RulesSet a wd:RuleFamily\\} WHERE \\{ ?RulesSet wd:hasRule ?Rule . \\}|CONSTRUCT \\{?RulesSet a wd:CodeBlock\\} WHERE \\{ ?RulesSet wd:hasCodeUnit ?Rule . \\} }''' .
+wd:hasCodeUnit grvz:ArrowHead 'diamond' .
+wd:hasCodeUnit grvz:Label 'hasCodeUnit' .

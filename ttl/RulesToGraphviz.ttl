@@ -1,0 +1,216 @@
+@prefix wd: 	<http://vieslav.pl/RulesToGraphviz#> .
+
+
+
+wd:RulesTableTest wd:hasRule [ wd:rowID 1;
+wd:hasCode '''CONSTRUCT { ?RulesSet a wd:T1 . ?RulesSet wd:has ' | ' .} WHERE { ?RulesSet a wd:RuleFamily . }'''];
+ wd:hasRule [ wd:rowID 2;
+wd:hasCode '''CONSTRUCT {?RulesSet a wd:T1} WHERE { ?RulesSet a wd:CodeBlock .}'''] .
+
+wd:RulesTableTest wd:dependFrom wd:RulesTableTest2 .
+wd:RulesTableTest wd:dependOn wd:RulesTableTest2 .
+
+wd:RulesTableTest2 wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?RulesSet a wd:RuleFamily} WHERE { ?RulesSet wd:hasRule ?Rule . }'''];
+ wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?RulesSet a wd:CodeBlock} WHERE { ?RulesSet wd:hasCodeUnit ?Rule . }'''] .
+
+
+wd:GenGraphvizAtr wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''
+CONSTRUCT {
+ ?RulesSet wd:grvizLabel ?p1 .
+ ?RulesSet wd:grvizShape 'record' .
+ }
+WHERE 
+{
+
+{
+SELECT ?RulesSet (concat('{ { RulesSet |', strafter(STR(?RulesSet), '#') ,' } | ', GROUP_CONCAT(?CodeD ; SEPARATOR = ' | '), '}') AS ?p1)
+		WHERE {
+		?RulesSet wd:hasRule ?Rule . 
+		?Rule wd:rowID ?id . 
+		?Rule wd:hasCode ?Code .
+		BIND( concat('{ ', STR(?id), ' | ', ENCODE_FOR_URI(?Code) , ' }') AS ?CodeD) 
+		} GROUP BY ?RulesSet
+}
+
+}
+''' ]; 
+wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''
+CONSTRUCT {
+ ?RulesSet wd:grvizLabel ?p1 .
+ ?RulesSet wd:grvizShape 'record' .
+ }
+WHERE 
+{
+
+{
+SELECT ?RulesSet (concat('{ { CodeUnit |', strafter(STR(?RulesSet), '#') ,' } | ', GROUP_CONCAT(?CodeD ; SEPARATOR = ' | '), '}') AS ?p1)
+		WHERE {
+		?RulesSet wd:hasCodeUnit ?Rule . 
+		?Rule a ?type . 
+		?Rule wd:text ?Code .
+		BIND( concat('{ ', strafter(STR(?type), '#'), ' | ', ENCODE_FOR_URI(?Code), ' }') AS ?CodeD) 
+		} GROUP BY ?RulesSet
+}
+
+}
+''' ] .
+
+wd:GraphvizEdgeAtr wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {bmm:partOf wd:grvizArrowHead 'diamond' .} WHERE {  }'''];
+wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?P wd:grvizLabel ?label .
+?P wd:grvizArrowtail 'dot' .
+} WHERE { ?s ?P ?o . BIND(strafter(str(?P),"#") AS ?label)}'''] .
+
+
+wd:GenGraphviz wd:isRelatedTo wd:GenGraphvizAtr .
+wd:GenGraphviz wd:isRelatedTo wd:GraphvizEdgeAtr .
+
+wd:GenGraphviz wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''
+CONSTRUCT { 
+?s ?p ?o .
+}
+WHERE
+{
+?s ?p ?o .
+MINUS {?s rdfs:label ?o .}
+MINUS {?s a ?o .}
+MINUS {?s wd:hasCodeUnit ?o}
+MINUS {?s wd:text ?o}
+MINUS {?s wd:hasRule ?o}
+MINUS {?s wd:hasCode ?o}
+MINUS {?s wd:rowID ?o}
+}
+''' ] .
+
+
+wd:BMMGraphvizAtr wd:hasRule [wd:rowID 1;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizColor 'blue' .
+	?P wd:grvizStyle 'rounded, filled' .
+	?P wd:grvizFillcolor  'lightblue' .
+	} WHERE {
+	?P a bmm:Mission .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "MISSION  |",  strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 2;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizColor 'red' .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'greenyellow' .
+	} WHERE {
+	?P a bmm:Vision .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "VISION  |",  strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 3;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'greenyellow' .
+	} WHERE {
+	?P a  bmm:Goal .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "GOAL  |",  strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 4;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'rounded, filled' .
+	?P wd:grvizFillcolor  'lightblue' .
+	} WHERE {
+	?P a  bmm:Strategy .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "STRATEGY  |",  strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 5;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'wheat' .
+	} WHERE {
+	?P a  bmm:Assessment .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "ASSESSMENT  |",  strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 6;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'Mrecord' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'yellow' .
+	} WHERE {
+	?P a  bmm:Regulation .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "REGULATION  |", strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 7;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'Mrecord' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'yellow' .
+	} WHERE {
+	?P a  bmm:ExternalInfluencer .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "EXTERNAL INFLUENCER  |", strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 8;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	} WHERE {
+	?P a  bmm:InfluencerCategory .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "INFLUENCER CATEGORY  |", strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''];
+	wd:hasRule [wd:rowID 9;
+	wd:hasCode '''
+	CONSTRUCT {?P wd:grvizShape 'record' .
+	?P wd:grvizLabel ?label .
+	?P wd:grvizStyle 'filled' .
+	?P wd:grvizFillcolor  'grey' .
+	} WHERE {
+	?P a  bmm:AssessmentCategory .
+	?P rdfs:label ?comment .
+	BIND( concat(' {{', "ASSESSMENT CATEGORY  |", strafter(str(?P),"#"), '} | ', ?comment , '} ') AS ?label)
+	} '''] .
+
+wd:BMMGraphvizEdgeAtr wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {bmm:partOf wd:grvizArrowHead 'diamond' .} WHERE {  }'''];
+wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?P wd:grvizLabel ?label .
+?P wd:grvizArrowtail 'dot' .
+} WHERE { ?s ?P ?o . BIND(strafter(str(?P),"#") AS ?label)}'''] .
+
+wd:BMMGenGraphviz wd:isRelatedTo wd:BMMGraphvizAtr .
+wd:BMMGenGraphviz wd:isRelatedTo wd:BMMGraphvizEdgeAtr .
+	
+wd:BMMGenGraphviz wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''
+CONSTRUCT { 
+?s ?p ?o .
+}
+WHERE
+{
+?s ?p ?o .
+MINUS {?s rdfs:label ?o .}
+MINUS {?s a ?o .}
+}
+''' ] .
+wd:SelectObject wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {zm1 ?p ?o . ?s ?p2 zm1 .} WHERE { zm1 ?p ?o . ?s ?p2 zm1 . }'''].

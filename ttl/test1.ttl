@@ -1,0 +1,6 @@
+@prefix wd: 	<http://widu.pl/moje#> .
+
+wd:RulesTableTest2 wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?RulesSet a wd:RuleFamily} WHERE { ?RulesSet wd:hasRule ?Rule . }'''];
+ wd:hasCodeUnit [ a wd:CONSTRUCT;
+wd:text '''CONSTRUCT {?RulesSet a wd:CodeBlock} WHERE { ?RulesSet wd:hasCodeUnit ?Rule . }'''] .
